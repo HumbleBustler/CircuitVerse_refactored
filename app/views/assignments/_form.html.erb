@@ -1,0 +1,148 @@
+<link rel="stylesheet" type="text/css" href="/css/restrictedElements.css">
+<script src="/js/metadata.json"></script>
+<%= form_with(model: [group,@assignment], local: true, html: {onsubmit:"beforeSubmit()"}, multipart: true ,id:"assignmentForm") do |form| %>
+  <% if @assignment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h2>
+
+      <ul>
+      <% @assignment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div id="name-field" class="form-group">
+    <%= form.label :name, class:'bold' %>
+    <%= form.text_field :name, id: :assignment_name, class: 'form-control' %>
+  </div>
+
+  <div id="description" class="form-group">
+    <!--<%= form.label :description %>-->
+    <%= render :partial => 'editor/index', :locals => {:content => @assignment.description} %>
+  </div>
+
+  <div id="deadline-field" class="form-group">
+    <%= form.label :deadline, class:'bold' %> <span id='remaining-time'><b>(something went wrong when loading script)</b></span>
+    <input id="assignment_deadline" name="assignment[deadline]" type="text" class="form-control">
+  </div>
+
+  <div id="grade-field" class="form-group">
+    <%= form.label :grading_scale, class:'bold' %>
+    <% if @assignment.new_record? %>
+      <span> Cannot be changed once set</span>
+      <div class="tooltip-help assignment-tooltip"> Help
+        <div class="right-help">
+          <div> <span style="font-style: italic"> Percent </span>: Assignment can be graded on a scale of 1-100 </div>
+          <div> <span style="font-style: italic"> Letter </span>: Assignment can be graded with letters A-F </div>
+          <div> <span style="font-style: italic"> No Grade </span>: Assignment won't be graded </div>
+          <div> <span style="font-style: italic"> Custom </span>: Assignment can be graded as required </div>
+        </div>
+      </div>
+
+      <%= form.select :grading_scale, [["No Grade", :no_scale], ["Letter", :letter], ["Percent", :percent], ["Custom", :custom]], {}, class: 'form-control' %>
+    <% else %>
+      <%= AssignmentDecorator.new(@assignment).graded %> - Cannot be edited
+    <% end %>
+  </div>
+
+  <h3 style="margin-top: 15px;"> Elements Restriction </h3>
+
+  <div id="restrictions-field" class="form-group " style="margin-bottom: 15px;">
+    <span style="font-weight: 600"> Enable elements restriction: </span>  <%= check_box_tag "restrict-elements", "1", @assignment.elements_restricted?, id: "restrict-elements", style: "margin-top: 0" %>
+    <div class="restricted-elements-list"> <!-- Operated by script --> </div>
+  </div>
+
+  <div class="actions form-group">
+    <%= form.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    loadRestrictions(`JSON.parse(<%= raw @assignment.restrictions %>)`);
+    loadDeadlinePicker();
+  })
+
+  function loadDeadlinePicker() {
+    $('#assignment_deadline').datetimepicker({
+      format: 'd/m/Y H:i',
+      minDate: formatDate(new Date(),'d/m/Y'),
+      validateOnBlur: false,
+      step: 30,
+      value: defaultAssignmentDate()
+    });
+    $('#assignment_deadline').change(function()
+    {
+      const newDate = Date.parseDate($('#assignment_deadline').val(),'d/m/Y H:i');
+      const remainingTimeLabel = $('#remaining-time');
+      const remainingSeconds = (newDate - Date.now()) / 1000;
+
+      if(newDate == null || remainingSeconds <= 0){
+        $('#assignment_deadline').datetimepicker({value: defaultAssignmentDate()});
+        $('#assignment_deadline').change();
+        return;
+      }
+      $('#assignment_deadline').datetimepicker({value: newDate});
+      updateRemainingTime(remainingTimeLabel,newDate);
+    });
+    $('#assignment_deadline').change();
+  }
+  function updateRemainingTime(label,toDate) {
+    const timeString = convertSecondsToReadableString((toDate - Date.now()) / 1000);
+    label.html(`Time remaining: ${timeString}`);
+  }
+  function defaultAssignmentDate() {
+    let date = new Date();
+    date.setDate(date.getDate() + 7);
+    date = formatDate(date,'d/M/y');
+
+    let hour = formatDate(new Date(),'H');
+    let minutes = formatDate(new Date(),'m');
+    if(minutes < 30) {
+      minutes = 30;;
+    }
+    else {
+      minutes = '00';
+      hour++;
+    }
+    return date + ' ' + hour + ':' + minutes;
+  }
+  function beforeSubmit() {
+      cleanEditor();
+      generateRestricitons();
+      generateDate();
+  }
+  function generateDate() {
+    const splittedDate = $('#assignment_deadline').val().split(/[\s,/:]+/)
+    let pickerDate = new Date(splittedDate[2], splittedDate[1]-1, splittedDate[0], splittedDate[3], splittedDate[4]);
+    const pickerUnix = pickerDate.getTime();
+    const pickerUnixWithTimezone = new Date(pickerUnix + new Date().getTimezoneOffset()*60*1000);
+    $('#assignment_deadline').val(formatDate(pickerUnixWithTimezone,"yyyy-MM-ddTHH:mm"));
+  }
+  function cleanEditor() {
+    $('<input />').attr('type', 'hidden')
+      .attr('name', 'description')
+      .attr('value', $("#trumbowyg-editor").cleanHtml())
+      .appendTo('#assignmentForm');
+  }
+  function generateRestricitons() {
+    let updated_restrictions = [];
+    if ($('#restrict-elements').is(":checked")) {
+      let restricted_elements = $('.element-restriction');
+      for (let i = 0; i < restricted_elements.length; i++) {
+        let temp = $(restricted_elements[i]);
+        if (temp.is(":checked"))
+          updated_restrictions.push(temp.val());
+      }
+    }
+    $('<input />').attr('type', 'hidden')
+        .attr('name', 'assignment[restrictions]')
+        .attr('value', JSON.stringify(updated_restrictions))
+        .appendTo('#assignmentForm');
+  }
+
+</script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.4.5/jquery.datetimepicker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.4.5/jquery.datetimepicker.min.js"></script>

@@ -1,0 +1,181 @@
+<script>
+  $(document).ready(function(){
+    $("#alertdiv").delay(5000).fadeOut(600);
+  });
+</script>
+
+<% content_for :title, "CircuitVerse - Online Digital Logic Circuit Simulator" %>
+
+<% set_meta_tags twitter: {
+  card: "summary_large_image",
+  title: yield(:title),
+  description: Rails.configuration.site_description,
+  image: {
+    src: "#{Rails.configuration.site_url}img/logixBanner2.png"
+  }
+} %>
+
+<% set_meta_tags og: {
+  title: yield(:title),
+  image: "#{Rails.configuration.site_url}img/logixBanner2.png",
+  description: Rails.configuration.site_description,
+  type: "article",
+  site_name: Rails.configuration.site_name
+} %>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+
+
+    <!-- <div class="col">
+        <img src="img/logixBanner.png" class="img-fluid img-thumbnail" alt="Responsive image">
+    </div> -->
+    <% if notice %>
+    <div class="row" id='alertdiv'>
+      <div class="alert alert-success alert-dismissible container-fluid text-center">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <%= notice %>
+      </div>
+    </div>
+    <% end %>
+    <div class="container">
+      <div class="row row-homepage">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <h1>Dive into the world of Logic Circuits for free!</h1> <br>
+          <p>From simple gates to complex sequential circuits, plot timing diagrams, automatic circuit generation, explore standard ICs, and much more</p>
+          <button type="button" class="btn btn-homepage btn-about" onclick="window.location.href = '/simulator';">Launch Simulator</button>
+          <a href="https://learn.circuitverse.org/" class="a-homepage">Learn Logic Design</a>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <%= image_tag "homepage/new_homepage_sketch.png", alt: "HomepageSketch", :class => "homepage-cover center-block" %>
+        </div>
+      </div>
+      <div class="row button-homepage">
+        <button type="button" class="btn btn-homepage2" onclick="window.location.href = '/teachers';">For Teachers</button>
+        <button type="button" class="btn btn-homepage2" onclick="window.location.href = '/contribute';">For Contributors</button>
+      </div>
+    </div>
+    <div class="container-fluid container-fluid_teachersbackground">
+      <div class="container">
+        <div class="row row-homepage-middle">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h3>Featured Examples</h3>
+          </div>
+        </div>
+        <div class="row row-homepage-middle">
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="card card-homepage-example">
+              <%= image_tag "homepage/rippleCarry.jpg", alt: "Ripple Carry", :class => "card-img-top card-img-homepage-example" %>
+              <div class="card-footer card-footer-homepage-example">
+                <p class="homepage-example-p">16-bit Ripple Carry Adder</p>
+                <button type="button" class="btn btn-about homepage-example-button" onclick="window.location.href = 'https://circuitverse.org/users/3/projects/248';">View</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="card card-homepage-example">
+              <%= image_tag "homepage/sap.jpg", alt: "SAP-1", :class => "card-img-top card-img-homepage-example" %>
+              <div class="card-footer card-footer-homepage-example">
+                <p class="homepage-example-p">SAP-1</p>
+                <button type="button" class="btn btn-about homepage-example-button" onclick="window.location.href = 'https://circuitverse.org/users/3/projects/67';">View</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="card card-homepage-example">
+              <%= image_tag "homepage/fullAdder.png", alt: "Full Adder", :class => "card-img-top card-img-homepage-example" %>
+              <div class="card-footer card-footer-homepage-example">
+                <p class="homepage-example-p">Full Adder from 2 Half Adders</p>
+                <button type="button" class="btn btn-about homepage-example-button" onclick="window.location.href = 'https://circuitverse.org/users/3/projects/247';">View</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center">
+              <button type="button" class="btn btn-homepage btn-about " onclick="window.location.href = '/examples';">Explore More</button>
+            </div>
+        </div>
+      </div>
+      </div>
+      <div class="container">
+        <div class="row row-homepage-middle">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h3>Features</h3>
+            <p class="homepage_p">Design circuits quickly and easily with a modern and intuitive user interface with drag-and-drop, copy/paste, zoom and more.</p>
+        </div>
+      </div>
+      <div class="row row-homepage-middle">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <div class="card card-homepage">
+            <%= image_tag "homepage/export-hd.png", alt: "Export HD", :class => "card-img-top cardimage-contribute" %>
+            <div class="card-body">
+              <h5 class="card-title">Export High-Resolution Images</h5>
+              <p class="card-text">CircuitVerse can export high resolution images in multiple formats including SVG.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+          <div class="card card-homepage">
+            <%= image_tag "homepage/combinations analysis.png", alt: "Combinational Analysis", :class => "card-img-top cardimage-contribute" %>
+            <div class="card-body">
+              <h5 class="card-title">Combinational Analysis</h5>
+              <p class="card-text">Automatically generate circuit based on truth table data. This is great to create complex logic circuits and can be easily be made into a subcircuit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-s-12 col-md-4 col-lg-4">
+          <div class="card card-homepage">
+            <%= image_tag "homepage/embed.png", alt: "Embed", :class => "card-img-top cardimage-contribute" %>
+            <div class="card-body">
+              <h5 class="card-title">Embed in Blogs</h5>
+              <p class="card-text">Since CircuitVerse is built in HTML5, an iFrame can be generated for each project allowing the user to embed it almost anywhere.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <div class="card card-homepage">
+            <%= image_tag "homepage/sub-circuit.png", alt: "Sub Circuit", :class => "card-img-top cardimage-contribute" %>
+            <div class="card-body">
+              <h5 class="card-title">Use Sub circuits</h5>
+              <p class="card-text">Create subcircuits once and use them repeatedly. This allows easier and more structured design.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <div class="card card-homepage">
+            <%= image_tag "homepage/multi-bit-bus.png", alt: "Multi Bit Bus", :class => "card-img-top cardimage-contribute" %>
+            <div class="card-body">
+              <h5 class="card-title">Multi Bit Buses and components</h5>
+              <p class="card-text">CircuitVerse supports multi bit wires, this means circuit design is easier, faster and uncluttered.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if user_signed_in? %>
+    <script>
+        if(localStorage.getItem("recover_login")){
+            window.location.href = "/simulator"
+        }
+    </script>
+    <% end %>
+
+<script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "SoftwareApplication",
+    "name" : "<%= Rails.configuration.site_name %>",
+    "image" : "<%= Rails.configuration.site_image %>",
+    "url" : "<%= Rails.configuration.site_url %>",
+    "applicationCategory" : "<%= Rails.configuration.site_category %>",
+    "downloadUrl" : "<%= Rails.configuration.site_download_url %>"
+  }
+</script>
+
+
+    <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->

@@ -1,0 +1,83 @@
+<% if policy(@project).can_feature? %>
+  <%= form_with(model: FeaturedCircuit.new, url: '/featured_circuits', multipart: true, id:"featuredCircuit") do |form| %>
+    <%= form.hidden_field :project_id, value: @project.id %>
+    <%= form.label :featured, class:'bold' %> <span> (Administrator Only) </span>
+    <%= form.check_box :featured, {checked: @project.featured?, id: 'featured_checkbox'} %>
+  <% end %>
+<% end %>
+
+<%= form_with(model: [ current_user, @project] , local: true, multipart: true, id:"projectForm") do |form| %>
+
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+      <% project.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name, class:'bold' %>
+    <%= form.text_field :name, id: :project_name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :tag_list, class:'bold' %> <span> Your project tags divided by comma. </span>
+    <%= form.text_field :tag_list, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :project_access_type, class:'bold' %>
+    <% if @project.featured? %>
+      <%= @warning %>
+      <span> <i class="fa fa-exclamation-triangle"></i> This project is featured. It will no longer be featured if public access is removed. </span>
+    <% end %>
+    <%= form.select :project_access_type, [["Public","Public"],["Private","Private"],["Limited access","Limited access"]], {},  class: 'form-control' %>
+  </div>
+
+  <div class="field" id="description">
+    <%= form.label :description %><br>
+    <%= render :partial => 'editor/index', :locals => {:content => @project.description} %>
+  </div>
+
+
+  <div class="actions form-group" onclick="beforeSubmit()">
+    <%= form.submit class: 'btn btn-primary' %>
+  </div>
+
+<% end %>
+
+
+<script>
+  function beforeSubmit() {
+    generateFeaturedCircuit()
+    generateEditor()
+  }
+
+  function generateEditor() {
+    $('<input />').attr('type', 'hidden')
+      .attr('name', 'description')
+      .attr('value', $("#editor").cleanHtml())
+      .appendTo('#projectForm');
+  }
+
+  function generateFeaturedCircuit() {
+    const canFeature = $("#featuredCircuit") != undefined
+    if(!canFeature) return;
+
+    $("#featuredCircuit").submit(function(e) {
+      e.preventDefault();
+      var form = $(this);
+      $.ajax({
+              type: $("#featured_checkbox").is(":checked") ? "POST" : "DELETE",
+              url: form.attr('action'),
+              data: form.serialize()
+      });
+    });
+    $("#featuredCircuit").submit();
+  }
+</script>

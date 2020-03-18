@@ -1,0 +1,109 @@
+// All the custom class styles
+.custom-file-upload {
+  background-color: $active-background;
+  border: 1px solid $green;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 6px 12px;
+  text-align: center;
+  width: 155px;
+}
+
+.file-button {
+  display: none;
+}
+
+.noprojects {
+  left: 30%;
+  position: absolute;
+  top: 30%;
+}
+
+.simulator {
+  border: 2px solid $green;
+  font-weight: 500;
+  &:hover {
+    color: $color-hover;
+    background: $active-background;
+  }
+}
+
+.logo {
+  height: 60px;
+}
+
+.logo-bottom {
+  max-height: 80px;
+}
+
+.navbar-light .navbar-nav {
+  .nav-item {
+    .nav-link {
+      color: $primary;
+      font-weight: 500;
+    }
+
+    &.active {
+      border-bottom: 2px solid $green;
+    }
+  }
+}
+
+.navbar-nav {
+  .nav-link {
+    position: relative;
+    &::before {
+      background-color: $green;
+      bottom: -2px;
+      content: '';
+      height: 2px;
+      left: 0;
+      position: absolute;
+      transition: 300ms;
+      width: 0;
+    }
+    &:hover::before {
+      opacity: 1;
+      width: 100%;
+    }
+  }
+}
+
+.empty-div {
+  height: 250px;
+}
+
+.footer-logo {
+  width: 80%;
+}
+
+.footer-social-icon {
+  margin-left: 15px;
+  width: 32px;
+}
+
+.footer-social {
+  margin-bottom: unset;
+  margin-left: 15px;
+}
+
+.copyright {
+  font-size: small;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.favblank {
+  align-items: center;
+  display: flex;
+  height: 300px;
+  justify-content: center;
+}
+
+.dropdown-item {
+  &:hover {
+    background-color: $green;
+    color: $white;
+  }
+}

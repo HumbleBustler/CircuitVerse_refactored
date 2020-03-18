@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <%= display_meta_tags description: yield(:description).presence  || Rails.configuration.site_description,
+    title: yield(:title).presence || 'CircuitVerse - Digital Circuit Simulator' %>
+    <meta name="keywords"
+      content="Digital circuits, logisim, online, educational platform, karnaugh map, kmap, electronic devices and circuits,digital electronics basics,introduction to digital electronics, simple electronics projects for students,electric circuit analysis, logic circuits, logic simulation, digital logic circuits, boolean logic">
+    <%= favicon_link_tag 'favicon.ico' %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+    <%= csrf_meta_tags %>
+
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <%= render "layouts/google_analytics" %>
+  </head>
+
+  <body>
+    <%= render "layouts/header" %>
+    <%= yield %>
+    <%= render "layouts/footer" %>
+
+    <script type="text/javascript">
+      // In this script tag we are checking alert's and if there is alert this code will be execute
+      if (document.querySelector(".alert")) {
+        setTimeout(() => document.querySelector(".alert").hide(), 3000);
+      }
+    </script>
+  </body>
+</html>
