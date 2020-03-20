@@ -150,3 +150,4 @@ class Wire{
         this.node2.checkDeleted();
     }
 }
+module.exports = Wire
